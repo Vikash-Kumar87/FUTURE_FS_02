@@ -193,14 +193,7 @@ const uploadToFirebaseStorage = async ({ localPath, contentType, originalname, u
       provider: 'firebase',
     };
   } catch (error) {
-    const message = String(error?.message || '').toLowerCase();
-    const bucketMisconfigured = message.includes('bucket does not exist') || message.includes('not found');
-
-    if (bucketMisconfigured) {
-      return localFallback;
-    }
-
-    throw error;
+    return localFallback;
   }
 };
 

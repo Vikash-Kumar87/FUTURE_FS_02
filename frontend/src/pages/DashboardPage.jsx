@@ -84,7 +84,11 @@ const DashboardPage = () => {
       }
 
       if (file && lead?.id) {
-        await leadService.uploadAttachment({ token, id: lead.id, file })
+        try {
+          await leadService.uploadAttachment({ token, id: lead.id, file })
+        } catch {
+          toast.error('Lead saved, but attachment upload failed')
+        }
       }
 
       toast.success(editingLead ? 'Lead updated successfully' : 'Lead created successfully')
