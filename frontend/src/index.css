@@ -1,0 +1,203 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-main: #edf4ff;
+  --bg-elevated: rgba(255, 255, 255, 0.8);
+  --bg-card: rgba(255, 255, 255, 0.92);
+  --border-main: rgba(83, 114, 164, 0.26);
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --accent-start: #0ea5e9;
+  --accent-end: #14b8a6;
+  --accent-warm: #f59e0b;
+  --ring-glow: 0 0 0 1px rgba(56, 189, 248, 0.45), 0 0 24px rgba(56, 189, 248, 0.15);
+}
+
+.dark {
+  --bg-main: #030917;
+  --bg-elevated: rgba(8, 23, 49, 0.7);
+  --bg-card: rgba(7, 20, 43, 0.82);
+  --border-main: rgba(125, 155, 199, 0.22);
+  --text-primary: #e2e8f0;
+  --text-secondary: #94a3b8;
+  --accent-start: #38bdf8;
+  --accent-end: #34d399;
+  --accent-warm: #facc15;
+  --ring-glow: 0 0 0 1px rgba(56, 189, 248, 0.6), 0 0 28px rgba(14, 165, 233, 0.22);
+}
+
+* {
+  @apply box-border;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  @apply m-0 font-sans antialiased;
+  background:
+    radial-gradient(circle at 8% 12%, rgba(56, 189, 248, 0.18), transparent 42%),
+    radial-gradient(circle at 94% 16%, rgba(20, 184, 166, 0.2), transparent 38%),
+    radial-gradient(circle at 68% 84%, rgba(245, 158, 11, 0.11), transparent 38%),
+    var(--bg-main);
+  color: var(--text-primary);
+  overflow-x: hidden;
+}
+
+body::before,
+body::after {
+  content: '';
+  position: fixed;
+  inset: auto;
+  pointer-events: none;
+  z-index: -1;
+  filter: blur(48px);
+  opacity: 0.55;
+}
+
+body::before {
+  width: 340px;
+  height: 340px;
+  top: -120px;
+  right: -80px;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.38), transparent 68%);
+  animation: driftA 14s ease-in-out infinite;
+}
+
+body::after {
+  width: 420px;
+  height: 420px;
+  bottom: -180px;
+  left: -120px;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.28), transparent 70%);
+  animation: driftB 17s ease-in-out infinite;
+}
+
+.card-surface {
+  background: var(--bg-card);
+  border: 1px solid var(--border-main);
+  box-shadow: 0 14px 44px rgba(2, 6, 23, 0.18);
+}
+
+.glass-panel {
+  position: relative;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), transparent), var(--bg-elevated);
+  border: 1px solid var(--border-main);
+  backdrop-filter: blur(22px);
+  box-shadow: 0 16px 46px rgba(2, 6, 23, 0.24);
+}
+
+.glass-panel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), transparent 38%);
+  opacity: 0.8;
+}
+
+.gradient-text {
+  background-image: linear-gradient(130deg, var(--accent-start), var(--accent-end));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+input,
+select,
+textarea,
+button {
+  transition: all 220ms ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  box-shadow: var(--ring-glow);
+}
+
+button:active {
+  transform: translateY(1px) scale(0.99);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.2);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(14, 165, 233, 0.8), rgba(20, 184, 166, 0.8));
+  border-radius: 999px;
+}
+
+.chip-glow {
+  position: relative;
+  overflow: hidden;
+}
+
+.chip-glow::before {
+  content: '';
+  position: absolute;
+  inset: -40%;
+  background: linear-gradient(120deg, transparent 20%, rgba(255, 255, 255, 0.35) 50%, transparent 80%);
+  transform: translateX(-130%);
+  transition: transform 560ms ease;
+}
+
+.chip-glow:hover::before {
+  transform: translateX(130%);
+}
+
+.card-surface:hover {
+  border-color: rgba(56, 189, 248, 0.42);
+  transform: translateY(-1px);
+}
+
+@keyframes driftA {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(-26px, 34px, 0);
+  }
+}
+
+@keyframes driftB {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(18px, -24px, 0);
+  }
+}
+
+@media (max-width: 640px) {
+  body::before,
+  body::after {
+    opacity: 0.38;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition-duration: 0ms !important;
+  }
+}
