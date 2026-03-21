@@ -160,35 +160,48 @@ const createCsvContent = (leads = []) => {
 };
 
 const uploadToFirebaseStorage = async ({ localPath, contentType, originalname, userId, leadId }) => {
+  const localFallback = {
+    destination: normalizeStoragePath(path.relative(process.cwd(), localPath)),
+    url: null,
+    provider: 'local',
+  };
+
   if (!isFirebaseAdminConfigured || !bucket) {
-    return {
-      destination: normalizeStoragePath(path.relative(process.cwd(), localPath)),
-      url: null,
-      provider: 'local',
-    };
+    return localFallback;
   }
 
   const safeName = String(originalname || 'file').replace(/[^a-zA-Z0-9._-]/g, '_');
   const destination = `leads/${userId}/${leadId}/${Date.now()}_${safeName}`;
 
-  await bucket.upload(localPath, {
-    destination,
-    metadata: {
-      contentType,
-      cacheControl: 'public, max-age=31536000',
-    },
-  });
+  try {
+    await bucket.upload(localPath, {
+      destination,
+      metadata: {
+        contentType,
+        cacheControl: 'public, max-age=31536000',
+      },
+    });
 
-  const [signedUrl] = await bucket.file(destination).getSignedUrl({
-    action: 'read',
-    expires: '2100-01-01',
-  });
+    const [signedUrl] = await bucket.file(destination).getSignedUrl({
+      action: 'read',
+      expires: '2100-01-01',
+    });
 
-  return {
-    destination,
-    url: signedUrl,
-    provider: 'firebase',
-  };
+    return {
+      destination,
+      url: signedUrl,
+      provider: 'firebase',
+    };
+  } catch (error) {
+    const message = String(error?.message || '').toLowerCase();
+    const bucketMisconfigured = message.includes('bucket does not exist') || message.includes('not found');
+
+    if (bucketMisconfigured) {
+      return localFallback;
+    }
+
+    throw error;
+  }
 };
 
 const getLeads = async (req, res, next) => {
