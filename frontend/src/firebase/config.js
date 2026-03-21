@@ -3,13 +3,15 @@ import { getAuth, GoogleAuthProvider } from 'firebase/auth'
 import { getFirestore } from 'firebase/firestore'
 import { getStorage } from 'firebase/storage'
 
+const env = (value) => String(value || '').trim()
+
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  apiKey: env(import.meta.env.VITE_FIREBASE_API_KEY),
+  authDomain: env(import.meta.env.VITE_FIREBASE_AUTH_DOMAIN),
+  projectId: env(import.meta.env.VITE_FIREBASE_PROJECT_ID),
+  storageBucket: env(import.meta.env.VITE_FIREBASE_STORAGE_BUCKET),
+  messagingSenderId: env(import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID),
+  appId: env(import.meta.env.VITE_FIREBASE_APP_ID),
 }
 
 const missingFirebaseEnvKeys = Object.entries({
