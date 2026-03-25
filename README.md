@@ -168,3 +168,14 @@ All lead endpoints require `Authorization: Bearer <Firebase ID Token>`.
 - Add API rate limiting and request validation for public deployment
 - Store env variables in secure secret managers
 - Use CI/CD and run lint/build checks before deployment
+
+## Auto Deploy (GitHub Actions Fallback)
+
+If platform Git integration does not trigger reliably, this repo includes a workflow at `.github/workflows/auto-deploy.yml` that runs on every push to `main` and can trigger deploy hooks.
+
+Set one or both GitHub repository secrets:
+
+- `RENDER_DEPLOY_HOOK_URL` = Render deploy hook URL (Render dashboard -> service -> Settings -> Deploy Hook)
+- `VERCEL_DEPLOY_HOOK_URL` = Vercel deploy hook URL (Vercel dashboard -> Project -> Settings -> Git -> Deploy Hooks)
+
+After adding secrets, any push to `main` triggers deployment automatically.

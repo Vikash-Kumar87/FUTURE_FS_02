@@ -1,0 +1,31 @@
+name: Auto Deploy
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  trigger-deploy-hooks:
+    runs-on: ubuntu-latest
+    env:
+      RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+      VERCEL_DEPLOY_HOOK_URL: ${{ secrets.VERCEL_DEPLOY_HOOK_URL }}
+    steps:
+      - name: Trigger Render deploy hook
+        if: env.RENDER_DEPLOY_HOOK_URL != ''
+        run: |
+          echo "Triggering Render deployment"
+          curl -fsS -X POST "$RENDER_DEPLOY_HOOK_URL"
+
+      - name: Trigger Vercel deploy hook
+        if: env.VERCEL_DEPLOY_HOOK_URL != ''
+        run: |
+          echo "Triggering Vercel deployment"
+          curl -fsS -X POST "$VERCEL_DEPLOY_HOOK_URL"
+
+      - name: Warn when hooks are missing
+        if: env.RENDER_DEPLOY_HOOK_URL == '' && env.VERCEL_DEPLOY_HOOK_URL == ''
+        run: |
+          echo "No deploy hooks configured. Add repository secrets RENDER_DEPLOY_HOOK_URL and/or VERCEL_DEPLOY_HOOK_URL."
